@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = 'http://localhost:3001/todos';
+const url = 'http://localhost:3001/todos/';
 
 export const getTodos = () => async dispatch => {
   dispatch({ type: 'GET_TODOS' });
@@ -29,9 +29,14 @@ export const checkTodos = id => dispatch => {
 export const updateTodos = todos => async dispatch => {
   dispatch({ type: 'UPDATE_DONE' });
   try {
-    const res = await axios.put(`${url}/${todos.id}`, todos);
-    dispatch({ type: 'UPDATE_DONE_FULLFILED', payload: res.data });
+   let resp = await axios.get(url + todos);
+    if (resp.data) {
+        resp.data.done = !resp.data.done;
+      const res = await axios.put(`${url}${todos}`, resp.data);
+      dispatch({ type: 'UPDATE_DONE_FULLFILED', payload: res.data });
+    }
   } catch (error) {
+    console.log('error', error)
     dispatch({ type: 'UPDATE_DONE_FAILED', payload: error });
   }
 }

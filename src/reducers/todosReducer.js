@@ -65,20 +65,20 @@ export const TodosReducer = (state = initialState, {type, payload}) => {
       return {
         ...state, 
         addTodoStatus: status, 
-        todos: [...state.todos, payload]
+        todos: [payload, ...state.todos]
       }
     }
     case 'DONE_TODO': {
       let doneTodo = {
         ...state.todos,
-        todos: state.todos.filter(todo => {
+        todos: state.todos.map(todo => {
           if (todo.id === payload) {
             todo.done = !todo.done
           }
           return todo;
         })
       }
-      return {...state, todos: doneTodo}
+      return {...state, todos: [...state.todos, doneTodo]}
     }
     case 'UPDATE_DONE': {
       let status = {
@@ -95,18 +95,19 @@ export const TodosReducer = (state = initialState, {type, payload}) => {
       return {...state, updateTodoStatus: status, error: payload}
     }
     case 'UPDATE_DONE_FULLFILED': {
-      let doneTodo = {
-        ...state.todos,
-        todos: state.todos.filter(todo => {
-          if (todo.id === payload.id) {
-            todo.done = !payload.done
+      let todos = [...state.todos];
+
+        for(let todo of todos) {
+          if(todo.id === payload.id) {
+            todo.done = !todo.done;
+            console.log('loop todo', todo);
           }
-          return todo
-        })
-      }
+        };
+
+        console.log('resp', todos);
       return {
         ...state,
-        todos: [...state.todos, doneTodo]
+        todos
       }
     }
     default:

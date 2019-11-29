@@ -27,9 +27,9 @@ const useStyle = makeStyles(theme => ({
 const TodoList = ({ getTodos, checkTodos, todos, updateTodos }) => {
   const classes = useStyle();
 
-  const handleChange = ({target: checkbox}) => {
-    let resp = todos.filter(todo => todo.id === checkbox.value);
-    updateTodos(resp);
+  const handleChange = ({target: checkbox}, todos) => {
+    console.log('handle changes', todos);
+    updateTodos(checkbox.value);
   }
 
   useEffect(() => {
@@ -47,12 +47,12 @@ const TodoList = ({ getTodos, checkTodos, todos, updateTodos }) => {
         <List className={classes.root}>
           {todos.map(todo => (
               <ListItem key={todo.id}>
-              <Checkbox
-                checked={todo.done}
-                onChange={handleChange}
-                value={todo.id}
-              />
-                <ListItemText primary={todo.text} style={{textDecoration: todo.done ? 'line-through' : ''}} />
+                <Checkbox
+                  checked={todo.done}
+                  onChange={(e) => handleChange(e, todo)}
+                  value={todo.id}
+                />
+                <ListItemText primary={todo.text} style={{textDecoration: todo.done ? 'line-through' : 'none'}} />
               </ListItem>
             ))
           }

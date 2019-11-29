@@ -1,14 +1,14 @@
 {
   "todos": [
     {
-      "id": 1,
       "text": "Pay Bills",
-      "done": false
+      "done": true,
+      "id": 1
     },
     {
+      "text": "Take the jacket to dry cleaning",
       "id": 2,
-      "text": "Take the jacker to dry cleaning",
-      "done": false
+      "done": true
     },
     {
       "id": 3,
@@ -21,14 +21,24 @@
       "done": true
     },
     {
-      "text": "new",
-      "done": false,
-      "id": 7
+      "text": "new todo",
+      "done": true,
+      "id": 8
     },
     {
       "text": "new todo",
       "done": false,
-      "id": 8
+      "id": 9
+    },
+    {
+      "text": "trst",
+      "done": false,
+      "id": 10
+    },
+    {
+      "text": "fdfdf",
+      "done": false,
+      "id": 11
     }
   ]
 }
