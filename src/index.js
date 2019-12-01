@@ -1,25 +1,22 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+const { GraphQLServer } = require('graphql-yoga');
+const { prisma } =  require('./generated/prisma-client');
+const Query = require('./revolvers/Query');
+const Mutation = require('./revolvers/Mutation');
 
-import { createStore, applyMiddleware } from 'redux';
-import { Provider } from 'react-redux';
-import thunkMiddleware from 'redux-thunk'
-import { logger } from 'redux-logger';
+const resolvers = {
+  Query,
+  Mutation
+}
 
-import reducers from './reducers';
+const server = new GraphQLServer({
+  typeDefs: './src/schema.graphql',
+  resolvers,
+  context: request => {
+    return {
+      ...request,
+      prisma
+    }
+  }
+});
 
-const store = createStore(reducers, applyMiddleware(thunkMiddleware, logger));
-
-ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>
-, document.getElementById('root'));
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+server.start(() => console.log('Server running on port 4000'));
