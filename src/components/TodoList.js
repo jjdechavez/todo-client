@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { getTodos, getTodo, updateTodos } from '../actions/todosAction';
+import { getTodos, getTodo, updateTodos, resetTodoStatus } from '../actions/todosAction';
 
 import { 
   List,
@@ -24,16 +24,29 @@ const useStyle = makeStyles(theme => ({
   }
 }))
 
-const TodoList = ({ getTodos, getTodo, todos, updateTodos }) => {
+const TodoList = ({ getTodos, todoStatus, resetTodoStatus, todos, updateTodos }) => {
   const classes = useStyle();
 
   const handleChange = ({target: checkbox}, todos) => {
     updateTodos(checkbox.value);
   }
 
+  // const {receiveTodos, sendTodos} = todoStatus;
+  // const prevTodos = usePrevious({receiveTodos, sendTodos});
+
   useEffect(() => {
-    getTodos()
-  }, [])
+    getTodos();
+
+    if (todoStatus.sent) {
+      resetTodoStatus();
+    }  
+    
+    if (todoStatus.error){
+      resetTodoStatus(); 
+    } 
+  }, []);
+
+  if (todoStatus.sending) return <p>Loading</p>
 
   return (
       <div className={classes.todoListContainer}>
@@ -61,9 +74,10 @@ const TodoList = ({ getTodos, getTodo, todos, updateTodos }) => {
 }
 
 function mapStatetoProps(state) {
-  const { todos } = state.todos;
+  const { todos, todoStatus } = state.todos;
   return {
-    todos
+    todos: todos || [],
+    todoStatus
   }
 }
 
@@ -72,7 +86,8 @@ function matchDispatchToProps(dispatch) {
     {
       getTodos,
       getTodo,
-      updateTodos
+      updateTodos,
+      resetTodoStatus
     },
     dispatch
   );

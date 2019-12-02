@@ -1,15 +1,34 @@
 import axios from 'axios';
+import { Lokka } from 'lokka';
+import { Transport } from 'lokka-transport-http';
 
 const url = 'http://localhost:3001/todos/';
+const client = new Lokka({
+  transport: new Transport('/api/graphql')
+})
 
 export const getTodos = () => async dispatch => {
   dispatch({ type: 'GET_TODOS' });
+  const mutationQuery = `
+    {
+      todos {
+        id
+        text
+        done
+      }
+    }
+  `;
   try {
-    const res = await axios.get(url);
-    dispatch({ type: 'GET_TODOS_FULLFILED', payload: res.data });
+    const res = await client.query(mutationQuery);
+    dispatch({ type: 'GET_TODOS_FULLFILED', payload: res.todos });
+    dispatch({ type: 'RESET_TODO_STATUS' });
   } catch (error) {
     dispatch({ type: 'GET_TODOS_FAILED', payload: error });
   }
+}
+
+export const resetTodoStatus = () => async dispatch => {
+  dispatch({ type: 'RESET_TODO_STATUS' })
 }
 
 export const addTodo = (text, done=false) => async dispatch => {
