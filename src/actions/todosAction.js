@@ -5,7 +5,7 @@ import { Transport } from 'lokka-transport-http';
 const url = 'http://localhost:3001/todos/';
 const client = new Lokka({
   transport: new Transport('/api/graphql')
-})
+});
 
 export const getTodos = () => async dispatch => {
   dispatch({ type: 'GET_TODOS' });
@@ -34,7 +34,18 @@ export const resetTodoStatus = () => async dispatch => {
 export const addTodo = (text, done=false) => async dispatch => {
   dispatch({ type: 'ADD_TODO' });
   try {
-    const res = await axios.post(url, { text, done });
+    const mutationQuery = `
+     ($text: String!){
+        newTodo(text: $text) {
+          id
+        }
+      }
+    `
+    const vars = {
+      text
+    }
+    const res = await client.mutate(mutationQuery, vars);
+    console.log('backednnnnn',res.data)
     dispatch({ type: 'ADD_TODO_FULLFILED', payload: res.data });
   } catch (error) {
     dispatch({ type: 'ADD_TODO_FAILED', payload: error })
