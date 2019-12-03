@@ -33,20 +33,22 @@ export const resetTodoStatus = () => async dispatch => {
 
 export const addTodo = (text, done=false) => async dispatch => {
   dispatch({ type: 'ADD_TODO' });
-  try {
-    const mutationQuery = `
-     ($text: String!){
-        newTodo(text: $text) {
-          id
-        }
+  const mutationQuery = `
+   ($text: String!){
+      newTodo(text: $text) {
+        id
+        text
+        done
       }
-    `
-    const vars = {
-      text
     }
+  `
+  const vars = {
+    text
+  }
+  try {
     const res = await client.mutate(mutationQuery, vars);
     console.log('backednnnnn',res.data)
-    dispatch({ type: 'ADD_TODO_FULLFILED', payload: res.data });
+    dispatch({ type: 'ADD_TODO_FULLFILED', payload: res.newTodo });
   } catch (error) {
     dispatch({ type: 'ADD_TODO_FAILED', payload: error })
   }
@@ -67,15 +69,24 @@ export const getTodo = id => async dispatch => {
   }
 }
 
-export const updateTodos = todos => async dispatch => {
+export const updateTodos = (id, done) => async dispatch => {
   dispatch({ type: 'UPDATE_DONE' });
+
+  const idMutationQuery = `
+    ($id: ID!, $done: Boolean) {
+      doneTodo(id: $id, done: $done) {
+        id
+        text
+        done
+      }
+    } 
+  `;
+  const vars = {
+    id, done
+  };
   try {
-   let resp = await axios.get(url + todos);
-    if (resp.data) {
-        resp.data.done = !resp.data.done;
-      const res = await axios.put(`${url}${todos}`, resp.data);
-      dispatch({ type: 'UPDATE_DONE_FULLFILED', payload: res.data });
-    }
+   let resp = await client.mutate(idMutationQuery,vars)  ;
+   dispatch({type: 'UPDATE_DONE_FULLFILED', payload: resp.doneTodo})
   } catch (error) {
     console.log('error', error)
     dispatch({ type: 'UPDATE_DONE_FAILED', payload: error });

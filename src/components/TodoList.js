@@ -28,7 +28,8 @@ const TodoList = ({ getTodos, todoStatus, resetTodoStatus, todos, updateTodos })
   const classes = useStyle();
 
   const handleChange = ({target: checkbox}, todos) => {
-    updateTodos(checkbox.value);
+    console.log('todos', todos)
+    updateTodos(checkbox.value, todos.done);
   }
 
   // const {receiveTodos, sendTodos} = todoStatus;

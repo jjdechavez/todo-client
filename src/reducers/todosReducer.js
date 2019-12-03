@@ -58,13 +58,6 @@ export const TodosReducer = (state = initialState, {type, payload}) => {
       }
       return {...state, addTodoStatus: status}
     }
-    case 'ADD_TODO_FAILED': {
-      let status ={
-        ...state.addTodoStatus,
-        sending: false
-      }
-      return {...state, addTodoStatus: status, error: payload}
-    }
     case 'ADD_TODO_FULLFILED': {
       let status = {
         ...state.addTodoStatus,
@@ -72,11 +65,19 @@ export const TodosReducer = (state = initialState, {type, payload}) => {
         sent: true
       };
 
+      console.log('payload todoreducer', payload)
       return {
         ...state, 
         addTodoStatus: status, 
         todos: [payload, ...state.todos]
       }
+    }
+    case 'ADD_TODO_FAILED': {
+      let status ={
+        ...state.addTodoStatus,
+        sending: false
+      }
+      return {...state, addTodoStatus: status, error: payload}
     }
     case 'GET_TODO': {
       let todo = {
