@@ -65,7 +65,6 @@ export const TodosReducer = (state = initialState, {type, payload}) => {
         sent: true
       };
 
-      console.log('payload todoreducer', payload)
       return {
         ...state, 
         addTodoStatus: status, 
@@ -78,6 +77,15 @@ export const TodosReducer = (state = initialState, {type, payload}) => {
         sending: false
       }
       return {...state, addTodoStatus: status, error: payload}
+    }
+    case 'RESET_ADD_TODO_STATUS': {
+      let status = {
+        ...state.addTodoStatus,
+        sending: false,
+        sent: false,
+        error: null
+      }
+      return { ...state, addTodoStatus: status }
     }
     case 'GET_TODO': {
       let todo = {
@@ -108,6 +116,26 @@ export const TodosReducer = (state = initialState, {type, payload}) => {
       }
       return {...state, updateTodoStatus: status}
     }
+    case 'UPDATE_DONE_FULLFILED': {
+      let todos = [...state.todos];
+      let status = {
+        ...state.updateTodoStatus,
+        sending: false,
+        sent: true
+      }
+
+        for(let todo of todos) {
+          if(todo.id === payload.id) {
+            todo.done = !todo.done;
+          }
+        };
+
+      return {
+        ...state,
+        todos,
+        updateTodoStatus: status
+      }
+    }
     case 'UPDATE_DONE_FAILED': {
       let status = {
         ...state.updateTodoStatus,
@@ -115,21 +143,14 @@ export const TodosReducer = (state = initialState, {type, payload}) => {
       }
       return {...state, updateTodoStatus: status, error: payload}
     }
-    case 'UPDATE_DONE_FULLFILED': {
-      let todos = [...state.todos];
-
-        for(let todo of todos) {
-          if(todo.id === payload.id) {
-            todo.done = !todo.done;
-            console.log('loop todo', todo);
-          }
-        };
-
-        console.log('resp', todos);
-      return {
-        ...state,
-        todos
+    case 'RESET_UPDATE_TODO_STATUS': {
+      let status = {
+        ...state.updateTodoStatus,
+        sending: false,
+        sent: false,
+        error: null
       }
+      return { ...state, updateTodoStatus: status }
     }
     default:
       return state;

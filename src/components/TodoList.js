@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { getTodos, getTodo, updateTodos, resetTodoStatus } from '../actions/todosAction';
+import { getTodos, updateTodos, resetTodoStatus } from '../actions/todosAction';
 
 import { 
   List,
@@ -28,12 +28,8 @@ const TodoList = ({ getTodos, todoStatus, resetTodoStatus, todos, updateTodos })
   const classes = useStyle();
 
   const handleChange = ({target: checkbox}, todos) => {
-    console.log('todos', todos)
     updateTodos(checkbox.value, todos.done);
   }
-
-  // const {receiveTodos, sendTodos} = todoStatus;
-  // const prevTodos = usePrevious({receiveTodos, sendTodos});
 
   useEffect(() => {
     getTodos();
@@ -86,7 +82,6 @@ function matchDispatchToProps(dispatch) {
   return bindActionCreators(
     {
       getTodos,
-      getTodo,
       updateTodos,
       resetTodoStatus
     },
