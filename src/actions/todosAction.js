@@ -83,16 +83,6 @@ export const resetUpdateTodoStatus = () => async dispatch => {
   dispatch({ type: 'RESET_UPDATE_DONE_TODO_STATUS' })
 }
 
-export const getCurrentTodo = todos => async dispatch => {
-  dispatch({ type: 'GET_CURRENT_TODO' });
-  try {
-    dispatch({ type: 'GET_CURRENT_TODO_FULLFILED', payload: todos });
-    dispatch({ type: 'GET_CURRENT_TODO_RESET' });
-  } catch (error) {
-    dispatch({ type: 'GET_CURRENT_TODO_FAILED', payload: error });
-  }
-}
-
 export const updateTextTodo = (id, text) => async dispatch => {
   dispatch({ type: 'UPDATE_TEXT' });
   const mutationQuery = `

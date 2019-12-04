@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 import { 
   getTodos, 
   updateDoneTodo, 
-  getCurrentTodo,
   resetTodoStatus, 
 } from '../actions/todosAction';
+import { TodoContext } from '../context/todoContext';
 
+import Skeleton from '@material-ui/lab/Skeleton';
 import EditIcon from '@material-ui/icons/Edit';
 
 import { 
@@ -20,8 +21,6 @@ import {
   ListItemSecondaryAction,
   IconButton,
 } from '@material-ui/core';
-import AddTodoForm from './forms/AddTodoForm';
-import {TodoContext} from '../context/todoContext';
 
 const useStyle = makeStyles(theme => ({
   root: {
@@ -37,7 +36,7 @@ const useStyle = makeStyles(theme => ({
   }
 }))
 
-const TodoList = ({ getTodos, todoStatus, resetTodoStatus, todos, updateDoneTodo  }) => {
+const TodoList = ({ getTodos, todoStatus, resetTodoStatus, todos, updateDoneTodo }) => {
   const classes = useStyle();
 
   const {state: {}, actions: { setToUpdate, setId, setText }} = useContext(TodoContext);
@@ -58,16 +57,14 @@ const TodoList = ({ getTodos, todoStatus, resetTodoStatus, todos, updateDoneTodo
     } 
   }, []);
 
-  if (todoStatus.sending) return <p>Loading</p>
-
+  
   const handleUpdate = ({ id, text }) => {
-    console.log('text sa handle update', text)
     setToUpdate(true);
     setId(id);
     setText(text)
-
   };
-
+  
+  if (todoStatus.sending) return <p>Loading</p>
   return (
     <div className={classes.todoListContainer}>
       <Typography
@@ -86,8 +83,10 @@ const TodoList = ({ getTodos, todoStatus, resetTodoStatus, todos, updateDoneTodo
             />
             <ListItemText primary={todo.text} style={{textDecoration: todo.done ? 'line-through' : 'none'}} />
             <ListItemSecondaryAction>
-              {/* <IconButton onClick={e => getCurrentTodo(todo)}> */}
-              <IconButton onClick={e => handleUpdate(todo)}>
+              <IconButton 
+                onClick={e => handleUpdate(todo)} 
+                style={{display: todo.done ? 'none' : ''}}
+              >
                 <EditIcon />
               </IconButton>
             </ListItemSecondaryAction>
@@ -112,7 +111,6 @@ function matchDispatchToProps(dispatch) {
     {
       getTodos,
       updateDoneTodo,
-      getCurrentTodo,
       resetTodoStatus
     },
     dispatch

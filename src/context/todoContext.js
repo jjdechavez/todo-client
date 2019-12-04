@@ -1,6 +1,6 @@
 import React, {useState, createContext} from 'react';
 
-export const TodoContext =  createContext();
+export const TodoContext = createContext();
 
 function TodoContextProvider(props) {
   const [text, setText] = useState('');

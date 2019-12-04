@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { addTodo, updateTextTodo, } from '../../actions/todosAction';
-import { TodoContext } from './../../context/todoContext';
+import { addTodo, updateTextTodo, } from '../actions/todosAction';
+import { TodoContext } from '../context/todoContext';
 
 import { 
   makeStyles,
@@ -16,7 +16,6 @@ const useStyle = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     marginTop: '3em',
-    width: 900
   },
   input: {
     flex: 1,
@@ -28,12 +27,13 @@ const useStyle = makeStyles(theme => ({
 }));
 const AddTodoForm = ({ addTodo, updateTextTodo }) => {
   const classes = useStyle();
-  const {state: {text, toUpdate, id}, actions: {setToUpdate, setText}} = useContext(TodoContext);
-
+  const {state: {text, toUpdate, id}, actions: {setToUpdate, setId, setText}} = useContext(TodoContext);
   const handleSubmit = e => {
     e.preventDefault();
     toUpdate ? updateTextTodo(id, text) : addTodo(text)
     setText('');
+    setId('');
+    setToUpdate(false);
   }
 
   return (
@@ -42,7 +42,7 @@ const AddTodoForm = ({ addTodo, updateTextTodo }) => {
         <TextField 
           className={classes.input} 
           variant="outlined"
-          label="New Task"
+          label={toUpdate ? "Change Todo" : "Add Todo"}
           value={text}
           onChange={e => setText(e.target.value)}
         />

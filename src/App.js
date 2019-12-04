@@ -2,7 +2,7 @@ import React from 'react';
 import TodoContextProvider from './context/todoContext';
 
 import Navbar from './components/Navbar';
-import AddTodoForm from './components/forms/AddTodoForm';
+import AddTodoForm from './components/TodoForm';
 import TodoList from './components/TodoList';
 
 import {
@@ -12,10 +12,9 @@ import {
 function App() {
   return (
     <div className="App">
-      <Container maxWidth="lg">
+      <Container maxWidth="md">
         <Navbar />
         <Container maxWidth="md">
-          {/* {editing ? <UpdateTodoForm /> : <AddTodoForm />} */}
           <TodoContextProvider>
             <AddTodoForm/>
             <TodoList/>

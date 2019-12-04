@@ -151,48 +151,6 @@ export const TodosReducer = (state = initialState, {type, payload}) => {
       }
       return { ...state, updateDoneTodoStatus: status }
     }
-    case 'GET_CURRENT_TODO': {
-      let status = {
-        ...state.getCurrentTodoStatus,
-        sending: true
-      }
-      return { ...state, getCurrentTodoStatus: status }
-    }
-    case 'GET_CURRENT_TODO_FULLFILED': {
-      let todo = {
-        ...state.getCurrentTodo,
-        id: payload.id,
-        text: payload.text,
-        done: payload.done
-      }
-      let status = {
-        ...state.getCurrentTodoStatus,
-        sending: false,
-        sent: true
-      }
-      return { 
-        ...state,
-        getCurrentTodo: todo,
-        getCurrentTodoStatus: status,
-        editing: true
-      }
-    }
-    case 'GET_CURRENT_TODO_FAILED': {
-      let status = {
-        ...state.getCurrentTodoStatus,
-        sending: false
-      }
-      return { ...state, getCurrentTodoStatus: status }
-    }
-    case 'GET_CURRENT_TODO_RESET': {
-      let status = {
-        ...state.getCurrentTodoStatus,
-        sending: false,
-        sent: false,
-        error: null
-      }
-      return { ...state, getCurrentTodoStatus: status }
-    }
     case 'UPDATE_TEXT': {
       let status = {
         ...state.updateTextTodoStatus,
