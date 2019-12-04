@@ -63,39 +63,54 @@ const TodoList = ({ getTodos, todoStatus, resetTodoStatus, todos, updateDoneTodo
     setId(id);
     setText(text)
   };
-  
-  if (todoStatus.sending) return <p>Loading</p>
-  return (
-    <div className={classes.todoListContainer}>
-      <Typography
-        component="span"
-        variant="h6"
-      >
-        Task
-      </Typography>
-      <List className={classes.root}>
-        {todos.map(todo => (
-          <ListItem key={todo.id} className={classes.listItem}>
-            <Checkbox
-              checked={todo.done}
-              onChange={(e) => handleChange(e, todo)}
-              value={todo.id}
-            />
-            <ListItemText primary={todo.text} style={{textDecoration: todo.done ? 'line-through' : 'none'}} />
-            <ListItemSecondaryAction>
-              <IconButton 
-                onClick={e => handleUpdate(todo)} 
-                style={{display: todo.done ? 'none' : ''}}
-              >
-                <EditIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-          ))
-        }
-      </List>
-    </div>
-  )
+  if (todoStatus.sending) {
+    return (
+      <div className={classes.todoListContainer}>
+        <Skeleton width="20%" />
+        <List className={classes.root}>
+            <ListItem className={classes.listItem}> 
+              <Skeleton variant="rect" width={30} height={30} />
+              <Skeleton variant="text" width="100%" height={40} style={{marginLeft: "1em"}} />
+              <ListItemSecondaryAction>
+                <Skeleton variant="rect" width={20} height={20} />
+              </ListItemSecondaryAction>
+            </ListItem>
+        </List>
+      </div>
+    )
+  } else {
+    return (
+      <div className={classes.todoListContainer}>
+        <Typography
+          component="span"
+          variant="h6"
+        >
+          Task
+        </Typography>
+        <List className={classes.root}>
+          {todos.map(todo => (
+            <ListItem key={todo.id} className={classes.listItem}>
+              <Checkbox
+                checked={todo.done}
+                onChange={(e) => handleChange(e, todo)}
+                value={todo.id}
+              />
+              <ListItemText primary={todo.text} style={{textDecoration: todo.done ? 'line-through' : 'none'}} />
+              <ListItemSecondaryAction>
+                <IconButton 
+                  onClick={e => handleUpdate(todo)} 
+                  style={{display: todo.done ? 'none' : ''}}
+                >
+                  <EditIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+            ))
+          }
+        </List>
+      </div>
+    )
+  }
 }
 
 function mapStatetoProps(state) {
