@@ -56,24 +56,8 @@ export const resetAddTodoStatus = () => async dispatch => {
   dispatch({ type: 'RESET_ADD_TODO_STATUS' })
 }
 
-// export const getTodo = id => async dispatch => {
-//   try {
-//     const getTodo = await axios.get(url + id);
-//     dispatch({ type: 'GET_TODO', payload: getTodo.data});
-//     if(getTodo.data) {
-//       // getTodo.data.done = !getTodo.data.done;
-//       console.log('todo data', getTodo.data.done)
-//       const doneTodo = await axios.patch(url + getTodo.data.id);
-//       dispatch({ type: 'DONE_TODO', payload: doneTodo.data })
-//     }
-//   } catch (error) {
-//     dispatch({ type: 'DONE_TODO_ERROR', payload: error })
-//   }
-// }
-
-export const updateTodos = (id, done) => async dispatch => {
+export const updateDoneTodo = (id, done) => async dispatch => {
   dispatch({ type: 'UPDATE_DONE' });
-
   const mutationQuery = `
     ($id: ID!, $done: Boolean) {
       doneTodo(id: $id, done: $done) {
@@ -87,14 +71,49 @@ export const updateTodos = (id, done) => async dispatch => {
     id, done
   };
   try {
-   let resp = await client.mutate(mutationQuery, vars)  ;
-   dispatch({type: 'UPDATE_DONE_FULLFILED', payload: resp.doneTodo})
-   dispatch({ type: 'RESET_UPDATE_TODO_STATUS' });
+   let resp = await client.mutate(mutationQuery, vars);
+   dispatch({type: 'UPDATE_DONE_FULLFILED', payload: resp.doneTodo});
+   dispatch({ type: 'RESET_UPDATE_DONE_TODO_STATUS' });
   } catch (error) {
     dispatch({ type: 'UPDATE_DONE_FAILED', payload: error });
   }
 }
 
 export const resetUpdateTodoStatus = () => async dispatch => {
-  dispatch({ type: 'RESET_UPDATE_TODO_STATUS' })
+  dispatch({ type: 'RESET_UPDATE_DONE_TODO_STATUS' })
+}
+
+export const getCurrentTodo = todos => async dispatch => {
+  dispatch({ type: 'GET_CURRENT_TODO' });
+  try {
+    dispatch({ type: 'GET_CURRENT_TODO_FULLFILED', payload: todos });
+    dispatch({ type: 'GET_CURRENT_TODO_RESET' });
+  } catch (error) {
+    dispatch({ type: 'GET_CURRENT_TODO_FAILED', payload: error });
+  }
+}
+
+export const updateTextTodo = (id, text) => async dispatch => {
+  console.log('trigger updateText', id, text);
+  dispatch({ type: 'UPDATE_TEXT' });
+  const mutationQuery = `
+    ($id: ID!, $text: String!) {
+      updateText(
+        id: $id,
+        text: $text
+      ){
+        id
+        text
+      }
+    }
+  `
+  const vars = {
+    id, text
+  }
+  try {
+    let res = await client.mutate(mutationQuery, vars);
+    dispatch({ type: 'UPDATE_TEXT_TODO_FULLFILED', payload: res.updateText });
+  } catch (error) {
+    dispatch({ type: 'UPDATE_TEXT_TODO_FAILED', payload: error })
+  }
 }

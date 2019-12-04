@@ -1,6 +1,7 @@
 const initialState = {
   todos: [],
-  getTodo: {},
+  getCurrentTodo: {},
+  editing: false,
   todoStatus: {
     sending: false,
     sent: false,
@@ -11,7 +12,17 @@ const initialState = {
     sent: false,
     error: null
   },
-  updateTodoStatus: {
+  getCurrentTodoStatus: {
+    sending: false,
+    sent: false,
+    error: null
+  },
+  updateDoneTodoStatus: {
+    sending: false,
+    sent: false,
+    error: null
+  },
+  updateTextTodoStatus: {
     sending: false,
     sent: false,
     error: null
@@ -87,18 +98,6 @@ export const TodosReducer = (state = initialState, {type, payload}) => {
       }
       return { ...state, addTodoStatus: status }
     }
-    case 'GET_TODO': {
-      let todo = {
-        id: payload.id,
-        text: payload.text,
-        done: payload.done
-      }
-      
-      return {
-        ...state,
-        getTodo: todo
-      }
-    }
     case 'DONE_TODO': {
       let doneTodo = state.todos.map(todo => {
         if (todo.id === payload.id) {
@@ -111,15 +110,15 @@ export const TodosReducer = (state = initialState, {type, payload}) => {
     }
     case 'UPDATE_DONE': {
       let status = {
-        ...state.updateTodoStatus,
+        ...state.updateDoneTodoStatus,
         sending: true,
       }
-      return {...state, updateTodoStatus: status}
+      return {...state, updateDoneTodoStatus: status}
     }
     case 'UPDATE_DONE_FULLFILED': {
       let todos = [...state.todos];
       let status = {
-        ...state.updateTodoStatus,
+        ...state.updateDoneTodoStatus,
         sending: false,
         sent: true
       }
@@ -133,24 +132,128 @@ export const TodosReducer = (state = initialState, {type, payload}) => {
       return {
         ...state,
         todos,
-        updateTodoStatus: status
+        updateDoneTodoStatus: status
       }
     }
     case 'UPDATE_DONE_FAILED': {
       let status = {
-        ...state.updateTodoStatus,
+        ...state.updateDoneTodoStatus,
         sending: false,
       }
-      return {...state, updateTodoStatus: status, error: payload}
+      return {...state, updateDoneTodoStatus: status, error: payload}
     }
-    case 'RESET_UPDATE_TODO_STATUS': {
+    case 'RESET_UPDATE_DONE_TODO_STATUS': {
       let status = {
-        ...state.updateTodoStatus,
+        ...state.updateDoneTodoStatus,
         sending: false,
         sent: false,
         error: null
       }
-      return { ...state, updateTodoStatus: status }
+      return { ...state, updateDoneTodoStatus: status }
+    }
+    case 'GET_CURRENT_TODO': {
+      let status = {
+        ...state.getCurrentTodoStatus,
+        sending: true
+      }
+      return { ...state, getCurrentTodoStatus: status }
+    }
+    case 'GET_CURRENT_TODO_FULLFILED': {
+      let todo = {
+        ...state.getCurrentTodo,
+        id: payload.id,
+        text: payload.text,
+        done: payload.done
+      }
+      let status = {
+        ...state.getCurrentTodoStatus,
+        sending: false,
+        sent: true
+      }
+      return { 
+        ...state,
+        getCurrentTodo: todo,
+        getCurrentTodoStatus: status,
+        editing: true
+      }
+    }
+    case 'GET_CURRENT_TODO_FAILED': {
+      let status = {
+        ...state.getCurrentTodoStatus,
+        sending: false
+      }
+      return { ...state, getCurrentTodoStatus: status }
+    }
+    case 'GET_CURRENT_TODO_RESET': {
+      let status = {
+        ...state.getCurrentTodoStatus,
+        sending: false,
+        sent: false,
+        error: null
+      }
+      return { ...state, getCurrentTodoStatus: status }
+    }
+    case 'UPDATE_TEXT': {
+      let status = {
+        ...state.updateTextTodoStatus,
+        sending: true,
+      }
+
+      return { ...state, updateTextTodo: status }
+    }
+    case 'UPDATE_TEXT_TODO_FULLFILED': {
+      let status = {
+        ...state.updateTextTodoStatus,
+        sending: false,
+        sent: true
+      }
+
+      let getCurrentTodo = {
+        id: null,
+        text: '',
+        done: null
+      }
+
+      const updateTodo = state.todos.map(todo => {
+        if (todo.id === payload.id) {
+          todo.text = payload.text
+        }
+        return todo;
+      })
+
+      return {
+        ...state,
+        updateTextTodoStatus: status,
+        todos: updateTodo,
+        getCurrentTodo,
+        editing: false
+      }
+    }
+    case 'UPDATE_TEXT_TODO_FAILED': {
+      let status = {
+        ...state.updateTextTodoStatus,
+        sending: false,
+      }
+      let getCurrentTodo = {
+        id: null,
+        text: '',
+        done: null
+      }
+      return {
+        ...state, 
+        updateDoneTodoStatus: status, 
+        editing: false,
+        getCurrentTodo
+      }
+    }
+    case 'RESET_UPDATE_TEXT_TODO_STATUS': {
+      let status = {
+        ...state.updateTextTodoStatus,
+        sending: false,
+        sent: false,
+        error: null
+      }
+      return { ...state, updateTextTodoStatus: status }
     }
     default:
       return state;
