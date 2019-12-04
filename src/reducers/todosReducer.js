@@ -199,7 +199,7 @@ export const TodosReducer = (state = initialState, {type, payload}) => {
         sending: true,
       }
 
-      return { ...state, updateTextTodo: status }
+      return { ...state, updateTextTodoStatus: status }
     }
     case 'UPDATE_TEXT_TODO_FULLFILED': {
       let status = {
@@ -208,7 +208,7 @@ export const TodosReducer = (state = initialState, {type, payload}) => {
         sent: true
       }
 
-      let getCurrentTodo = {
+      let getCurrentTodo= {
         id: null,
         text: '',
         done: null
@@ -225,8 +225,7 @@ export const TodosReducer = (state = initialState, {type, payload}) => {
         ...state,
         updateTextTodoStatus: status,
         todos: updateTodo,
-        getCurrentTodo,
-        editing: false
+        getCurrentTodo
       }
     }
     case 'UPDATE_TEXT_TODO_FAILED': {
@@ -234,7 +233,7 @@ export const TodosReducer = (state = initialState, {type, payload}) => {
         ...state.updateTextTodoStatus,
         sending: false,
       }
-      let getCurrentTodo = {
+      let getCurrentTodoStatus = {
         id: null,
         text: '',
         done: null
@@ -242,8 +241,8 @@ export const TodosReducer = (state = initialState, {type, payload}) => {
       return {
         ...state, 
         updateDoneTodoStatus: status, 
+        getCurrentTodoStatus,
         editing: false,
-        getCurrentTodo
       }
     }
     case 'RESET_UPDATE_TEXT_TODO_STATUS': {
@@ -253,7 +252,11 @@ export const TodosReducer = (state = initialState, {type, payload}) => {
         sent: false,
         error: null
       }
-      return { ...state, updateTextTodoStatus: status }
+      return { 
+        ...state, 
+        updateTextTodoStatus: status,
+        editing: false
+      }
     }
     default:
       return state;

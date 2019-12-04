@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import TodoContextProvider from './context/todoContext';
 
 import Navbar from './components/Navbar';
 import AddTodoForm from './components/forms/AddTodoForm';
@@ -8,27 +8,22 @@ import TodoList from './components/TodoList';
 import {
   Container,
 } from '@material-ui/core';
-import UpdateTodoForm from './components/forms/UpdateTodoForm';
 
-function App({ editing }) {
+function App() {
   return (
     <div className="App">
       <Container maxWidth="lg">
         <Navbar />
         <Container maxWidth="md">
-          {editing ? <UpdateTodoForm /> : <AddTodoForm />}
-          <TodoList />
+          {/* {editing ? <UpdateTodoForm /> : <AddTodoForm />} */}
+          <TodoContextProvider>
+            <AddTodoForm/>
+            <TodoList/>
+          </TodoContextProvider>
         </Container>
       </Container>
     </div>
   );
 }
 
-function mapStateToProps(state) {
-  const { editing } = state.todos;
-  return {
-    editing
-  }
-}
-
-export default connect(mapStateToProps)(App);
+export default App;

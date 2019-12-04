@@ -94,7 +94,6 @@ export const getCurrentTodo = todos => async dispatch => {
 }
 
 export const updateTextTodo = (id, text) => async dispatch => {
-  console.log('trigger updateText', id, text);
   dispatch({ type: 'UPDATE_TEXT' });
   const mutationQuery = `
     ($id: ID!, $text: String!) {
@@ -113,6 +112,7 @@ export const updateTextTodo = (id, text) => async dispatch => {
   try {
     let res = await client.mutate(mutationQuery, vars);
     dispatch({ type: 'UPDATE_TEXT_TODO_FULLFILED', payload: res.updateText });
+    dispatch({ type: 'RESET_UPDATE_TEXT_TODO_STATUS' });
   } catch (error) {
     dispatch({ type: 'UPDATE_TEXT_TODO_FAILED', payload: error })
   }

@@ -33,8 +33,8 @@ const UpdateTodoForm = ({ getCurrentTodo, updateTextTodo }) => {
 
   useEffect(() => {
     if(getCurrentTodo) {
-      setEditText(getCurrentTodo.text)
-      setId(getCurrentTodo.id)
+      setEditText(getCurrentTodo.text);
+      setId(getCurrentTodo.id);
     }
   }, [])
 

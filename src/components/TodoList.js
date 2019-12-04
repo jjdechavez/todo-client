@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { 
@@ -20,6 +20,8 @@ import {
   ListItemSecondaryAction,
   IconButton,
 } from '@material-ui/core';
+import AddTodoForm from './forms/AddTodoForm';
+import {TodoContext} from '../context/todoContext';
 
 const useStyle = makeStyles(theme => ({
   root: {
@@ -35,8 +37,10 @@ const useStyle = makeStyles(theme => ({
   }
 }))
 
-const TodoList = ({ getTodos, todoStatus, resetTodoStatus, todos, updateDoneTodo, getCurrentTodo }) => {
+const TodoList = ({ getTodos, todoStatus, resetTodoStatus, todos, updateDoneTodo  }) => {
   const classes = useStyle();
+
+  const {state: {}, actions: { setToUpdate, setId, setText }} = useContext(TodoContext);
 
   const handleChange = ({target: checkbox}, todos) => {
     updateDoneTodo(checkbox.value, todos.done);
@@ -56,33 +60,42 @@ const TodoList = ({ getTodos, todoStatus, resetTodoStatus, todos, updateDoneTodo
 
   if (todoStatus.sending) return <p>Loading</p>
 
+  const handleUpdate = ({ id, text }) => {
+    console.log('text sa handle update', text)
+    setToUpdate(true);
+    setId(id);
+    setText(text)
+
+  };
+
   return (
-      <div className={classes.todoListContainer}>
-        <Typography
-          component="span"
-          variant="h6"
-        >
-          Task
-        </Typography>
-        <List className={classes.root}>
-          {todos.map(todo => (
-              <ListItem key={todo.id} className={classes.listItem}>
-                <Checkbox
-                  checked={todo.done}
-                  onChange={(e) => handleChange(e, todo)}
-                  value={todo.id}
-                />
-                <ListItemText primary={todo.text} style={{textDecoration: todo.done ? 'line-through' : 'none'}} />
-                <ListItemSecondaryAction>
-                  <IconButton onClick={e => getCurrentTodo(todo)}>
-                    <EditIcon />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-            ))
-          }
-        </List>
-      </div>
+    <div className={classes.todoListContainer}>
+      <Typography
+        component="span"
+        variant="h6"
+      >
+        Task
+      </Typography>
+      <List className={classes.root}>
+        {todos.map(todo => (
+          <ListItem key={todo.id} className={classes.listItem}>
+            <Checkbox
+              checked={todo.done}
+              onChange={(e) => handleChange(e, todo)}
+              value={todo.id}
+            />
+            <ListItemText primary={todo.text} style={{textDecoration: todo.done ? 'line-through' : 'none'}} />
+            <ListItemSecondaryAction>
+              {/* <IconButton onClick={e => getCurrentTodo(todo)}> */}
+              <IconButton onClick={e => handleUpdate(todo)}>
+                <EditIcon />
+              </IconButton>
+            </ListItemSecondaryAction>
+          </ListItem>
+          ))
+        }
+      </List>
+    </div>
   )
 }
 

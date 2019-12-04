@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { addTodo } from '../../actions/todosAction';
+import { addTodo, updateTextTodo, } from '../../actions/todosAction';
+import { TodoContext } from './../../context/todoContext';
 
 import { 
   makeStyles,
@@ -15,7 +16,7 @@ const useStyle = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     marginTop: '3em',
-    width: 800
+    width: 900
   },
   input: {
     flex: 1,
@@ -25,14 +26,13 @@ const useStyle = makeStyles(theme => ({
     padding: '1em 3em'
   }
 }));
-
-const AddTodoForm = ({addTodo}) => {
-  const [text, setText] = useState('');
+const AddTodoForm = ({ addTodo, updateTextTodo }) => {
   const classes = useStyle();
+  const {state: {text, toUpdate, id}, actions: {setToUpdate, setText}} = useContext(TodoContext);
 
   const handleSubmit = e => {
     e.preventDefault();
-    addTodo(text);
+    toUpdate ? updateTextTodo(id, text) : addTodo(text)
     setText('');
   }
 
@@ -62,7 +62,8 @@ const AddTodoForm = ({addTodo}) => {
 function matchDispatchToProps(dispatch) {
   return bindActionCreators(
     {
-      addTodo
+      addTodo,
+      updateTextTodo
     },
     dispatch
   );
