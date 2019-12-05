@@ -6,17 +6,20 @@ function TodoContextProvider(props) {
   const [text, setText] = useState('');
   const [toUpdate, setToUpdate] = useState(false);
   const [id, setId] = useState('');
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const value = {
     state: {
       text,
       toUpdate,
-      id
+      id,
+      isExpanded,
     },
     actions: {
       setText,
       setToUpdate,
-      setId
+      setId,
+      setIsExpanded,
     }
   }
   return (

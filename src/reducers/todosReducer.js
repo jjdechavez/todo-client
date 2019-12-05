@@ -98,16 +98,6 @@ export const TodosReducer = (state = initialState, {type, payload}) => {
       }
       return { ...state, addTodoStatus: status }
     }
-    case 'DONE_TODO': {
-      let doneTodo = state.todos.map(todo => {
-        if (todo.id === payload.id) {
-          todo.done = !todo.done
-        }
-        return todo;
-      })
-
-      return {...state, todos: [...state.todos, doneTodo]}
-    }
     case 'UPDATE_DONE': {
       let todos = [...state.todos];
       let status = {

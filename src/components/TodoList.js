@@ -8,7 +8,9 @@ import {
 } from '../actions/todosAction';
 import { TodoContext } from '../context/todoContext';
 
-import Skeleton from '@material-ui/lab/Skeleton';
+import {
+  Skeleton,
+} from '@material-ui/lab/';
 import EditIcon from '@material-ui/icons/Edit';
 
 import { 
@@ -20,6 +22,7 @@ import {
   Checkbox,
   ListItemSecondaryAction,
   IconButton,
+  Button
 } from '@material-ui/core';
 
 const useStyle = makeStyles(theme => ({
@@ -33,18 +36,21 @@ const useStyle = makeStyles(theme => ({
   },
   listItem: {
     flexGrow: 1
+  },
+  showMoreBtn: {
+    width: '100%',
+    marginBottom: '2em'
   }
 }))
 
 const TodoList = ({ getTodos, todoStatus, resetTodoStatus, todos, updateDoneTodo }) => {
   const classes = useStyle();
 
-  const {state: {}, actions: { setToUpdate, setId, setText }} = useContext(TodoContext);
-
-  const handleChange = ({target: checkbox}, todos) => {
-    updateDoneTodo(checkbox.value, todos.done);
-  }
-
+  const {
+    state: { isExpanded },
+    actions: { setToUpdate, setId, setText, setIsExpanded }
+  } = useContext(TodoContext);
+  
   useEffect(() => {
     getTodos();
 
@@ -56,7 +62,6 @@ const TodoList = ({ getTodos, todoStatus, resetTodoStatus, todos, updateDoneTodo
       resetTodoStatus(); 
     } 
   }, []);
-
   
   const handleUpdate = ({ id, text }) => {
     setToUpdate(true);
@@ -64,6 +69,17 @@ const TodoList = ({ getTodos, todoStatus, resetTodoStatus, todos, updateDoneTodo
     setText(text)
   };
   
+  const handleChange = ({target: checkbox}, todos) => {
+    updateDoneTodo(checkbox.value, todos.done);
+  }
+
+  const handleClick = (lengthTodos, isExpanded) => {
+    if (!isExpanded)
+      if(lengthTodos > 10) return lengthTodos / 2
+    else
+      return lengthTodos
+  }
+
   let container = [];
   const listLoading = () => {
     for (let i = 0; i < 3; i++) {
@@ -97,26 +113,32 @@ const TodoList = ({ getTodos, todoStatus, resetTodoStatus, todos, updateDoneTodo
           Task
         </Typography>
         <List className={classes.root}>
-          {todos.map(todo => (
-            <ListItem key={todo.id} className={classes.listItem}>
-              <Checkbox
-                checked={todo.done}
-                onChange={(e) => handleChange(e, todo)}
-                value={todo.id}
-              />
-              <ListItemText primary={todo.text} style={{textDecoration: todo.done ? 'line-through' : 'none'}} />
-              <ListItemSecondaryAction>
-                <IconButton 
-                  onClick={e => handleUpdate(todo)} 
-                  style={{display: todo.done ? 'none' : ''}}
-                >
-                  <EditIcon />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
-            ))
-          }
+          {todos.slice(null, handleClick(todos.length, isExpanded))
+            .map(todo => {
+              return (
+                <ListItem key={todo.id} className={classes.listItem}>
+                  <Checkbox
+                    checked={todo.done}
+                    onChange={(e) => handleChange(e, todo)}
+                    value={todo.id}
+                  />
+                  <ListItemText primary={todo.text} style={{textDecoration: todo.done ? 'line-through' : 'none'}} />
+                  <ListItemSecondaryAction>
+                    <IconButton 
+                      onClick={e => handleUpdate(todo)} 
+                      style={{display: todo.done ? 'none' : ''}}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              )
+            }
+          )}
         </List>
+        {todos.length > 10 ? <Button className={classes.showMoreBtn} color="secondary" onClick={() => handleClick(todos.length, setIsExpanded(!isExpanded))}>
+          { !isExpanded ? 'Show More' : 'Show Less Todos'}
+        </Button> : null}
       </div>
     )
   }
