@@ -5,13 +5,13 @@ import {
   getTodos, 
   updateDoneTodo, 
   resetTodoStatus, 
+  deleteTodo
 } from '../actions/todosAction';
 import { TodoContext } from '../context/todoContext';
 
-import {
-  Skeleton,
-} from '@material-ui/lab/';
+import {Skeleton} from '@material-ui/lab/';
 import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import { 
   List,
@@ -43,7 +43,7 @@ const useStyle = makeStyles(theme => ({
   }
 }))
 
-const TodoList = ({ getTodos, todoStatus, resetTodoStatus, todos, updateDoneTodo }) => {
+const TodoList = ({ getTodos, todoStatus, resetTodoStatus, todos, updateDoneTodo, deleteTodo }) => {
   const classes = useStyle();
 
   const {
@@ -130,6 +130,11 @@ const TodoList = ({ getTodos, todoStatus, resetTodoStatus, todos, updateDoneTodo
                     >
                       <EditIcon />
                     </IconButton>
+                    <IconButton
+                      onClick={e => deleteTodo(todo.id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
                   </ListItemSecondaryAction>
                 </ListItem>
               )
@@ -157,7 +162,8 @@ function matchDispatchToProps(dispatch) {
     {
       getTodos,
       updateDoneTodo,
-      resetTodoStatus
+      resetTodoStatus,
+      deleteTodo
     },
     dispatch
   );

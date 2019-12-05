@@ -210,6 +210,13 @@ export const TodosReducer = (state = initialState, {type, payload}) => {
         editing: false
       }
     }
+    case 'DELETE_TODO': {
+      let deleteTodo = state.todos.filter(todo => todo.id !== payload.id)
+      return {
+        ...state,
+        todos: deleteTodo
+      }
+    }
     default:
       return state;
   }

@@ -107,3 +107,22 @@ export const updateTextTodo = (id, text) => async dispatch => {
     dispatch({ type: 'UPDATE_TEXT_TODO_FAILED', payload: error })
   }
 }
+
+export const deleteTodo = id => async dispatch => {
+  const mutaionQuery = `
+    ($id: ID!) {
+      deleteTodo(id: $id) {
+        id
+      }
+    }
+  `
+  const vars = {
+    id
+  }
+  try {
+    let res = await client.mutate(mutaionQuery, vars)
+    dispatch({ type: 'DELETE_TODO', payload: res.deleteTodo })
+  } catch (error) {
+    dispatch({ type: 'DELETE_TODO_ERROR', payload: error })
+  }
+}
