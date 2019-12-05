@@ -63,21 +63,30 @@ const TodoList = ({ getTodos, todoStatus, resetTodoStatus, todos, updateDoneTodo
     setId(id);
     setText(text)
   };
-  if (todoStatus.sending) {
-    return (
-      <div className={classes.todoListContainer}>
-        <Skeleton width="20%" />
-        <List className={classes.root}>
+  
+  let container = [];
+  const listLoading = () => {
+    for (let i = 0; i < 3; i++) {
+      container.push(
+        <div key={i} className={classes.todoListContainer}>
+          <Skeleton width="20%" />
+          <List className={classes.root}>
             <ListItem className={classes.listItem}> 
               <Skeleton variant="rect" width={30} height={30} />
-              <Skeleton variant="text" width="100%" height={40} style={{marginLeft: "1em"}} />
+              <Skeleton variant="text" width="80%" height={40} style={{marginLeft: "1em"}} />
               <ListItemSecondaryAction>
                 <Skeleton variant="rect" width={20} height={20} />
               </ListItemSecondaryAction>
             </ListItem>
-        </List>
-      </div>
-    )
+          </List>
+        </div>
+      )
+    }
+    return <React.Fragment>{container}</React.Fragment>
+  }
+
+  if (todoStatus.sending) {
+    return listLoading()
   } else {
     return (
       <div className={classes.todoListContainer}>

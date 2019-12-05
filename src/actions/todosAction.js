@@ -57,7 +57,7 @@ export const resetAddTodoStatus = () => async dispatch => {
 }
 
 export const updateDoneTodo = (id, done) => async dispatch => {
-  dispatch({ type: 'UPDATE_DONE' });
+  dispatch({ type: 'UPDATE_DONE', payload: id });
   const mutationQuery = `
     ($id: ID!, $done: Boolean) {
       doneTodo(id: $id, done: $done) {

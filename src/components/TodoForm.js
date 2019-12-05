@@ -51,8 +51,9 @@ const AddTodoForm = ({ addTodo, updateTextTodo }) => {
           variant="contained"
           className={classes.addBtn}
           color="primary"
+          disabled={text ? false : true}
         >
-          Add
+          {toUpdate ? 'Save' : 'Add'}
         </Button>
       </form>
     </>

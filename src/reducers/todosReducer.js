@@ -109,29 +109,33 @@ export const TodosReducer = (state = initialState, {type, payload}) => {
       return {...state, todos: [...state.todos, doneTodo]}
     }
     case 'UPDATE_DONE': {
+      let todos = [...state.todos];
       let status = {
         ...state.updateDoneTodoStatus,
         sending: true,
       }
-      return {...state, updateDoneTodoStatus: status}
+
+      for(let todo of todos) {
+        if(todo.id === payload) {
+          todo.done = !todo.done;
+        }
+      };
+
+      return {
+        ...state, 
+        todos,
+        updateDoneTodoStatus: status
+      }
     }
     case 'UPDATE_DONE_FULLFILED': {
-      let todos = [...state.todos];
       let status = {
         ...state.updateDoneTodoStatus,
         sending: false,
         sent: true
       }
 
-        for(let todo of todos) {
-          if(todo.id === payload.id) {
-            todo.done = !todo.done;
-          }
-        };
-
       return {
         ...state,
-        todos,
         updateDoneTodoStatus: status
       }
     }
